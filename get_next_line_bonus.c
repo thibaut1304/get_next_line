@@ -10,13 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 int		ft_return(char **str, char **line)
 {
 	int		i;
 	char	*tmp;
 
+	tmp = NULL;
 	i = 0;
 	while ((*str)[i] != '\n' && (*str)[i])
 		i++;
@@ -35,6 +36,7 @@ int		readline(int fd, char **str, char **buff)
 	int		res;
 	char	*tmp;
 
+	tmp = NULL;
 	while ((res = read(fd, *buff, BUFFER_SIZE)) > 0)
 	{
 		(*buff)[res] = 0;

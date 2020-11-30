@@ -18,6 +18,7 @@ int		ft_return(char **str, char **line)
 	char	*tmp;
 
 	i = 0;
+	tmp = NULL;
 	while ((*str)[i] != '\n' && (*str)[i])
 		i++;
 	*line = ft_substr(*str, 0, i);
@@ -35,6 +36,7 @@ int		readline(int fd, char **str, char **buff)
 	int		res;
 	char	*tmp;
 
+	tmp = NULL;
 	while ((res = read(fd, *buff, BUFFER_SIZE)) > 0)
 	{
 		(*buff)[res] = 0;

@@ -5,76 +5,54 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: thhusser <thhusser@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/11/24 21:19:05 by thhusser          #+#    #+#             */
-/*   Updated: 2020/11/24 21:19:05 by thhusser         ###   ########.fr       */
+/*   Created: 2021/05/15 15:35:42 by thhusser          #+#    #+#             */
+/*   Updated: 2021/05/15 15:35:42 by thhusser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		ft_return(char **str, char **line)
+char *ft_realloc(char *line, int *i)
 {
-	int		i;
-	char	*tmp;
+    int l = 0;
+    char *str;
 
-	i = 0;
-	tmp = NULL;
-	while ((*str)[i] != '\n' && (*str)[i])
-		i++;
-	*line = ft_substr(*str, 0, i);
-	if ((*str)[i] == '\n')
-		tmp = ft_strdup(&(*str)[i + 1]);
-	free(*str);
-	*str = tmp;
-	if (!*str)
-		return (0);
-	return (1);
+    if (!(str = malloc(*i * 2)))
+        return (NULL);
+    *i *= 2;
+    while (line && line[l])
+    {
+        str[l] = line[l];
+        l++;
+    }
+    while(l < *i)
+    {
+        str[l] = 0;
+        l++;
+    }
+    // free(line);
+    return(str);
 }
 
-int		readline(int fd, char **str, char **buff)
+int get_next_line(int fd, char **line)
 {
-	int		res;
-	char	*tmp;
+    int r = 1;
+    int i = -1;
+    int malloc_size = 50;
 
-	tmp = NULL;
-	while ((res = read(fd, *buff, BUFFER_SIZE)) > 0)
-	{
-		(*buff)[res] = 0;
-		tmp = ft_strjoin(*str, *buff);
-		free(*str);
-		*str = tmp;
-		if (ft_strchr(*str, '\n'))
-			break ;
-	}
-	return (res);
-}
-
-int		ft_error(char *buff)
-{
-	free(buff);
-	return (-1);
-}
-
-int		get_next_line(int fd, char **line)
-{
-	int				res;
-	static char		*str;
-	char			*buff;
-
-	if (BUFFER_SIZE <= 0 || fd < 0 || !line)
-		return (-1);
-	buff = (char*)malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (!buff || read(fd, buff, 0) < 0)
-		return (ft_error(buff));
-	res = readline(fd, &str, &buff);
-	free(buff);
-	if (res < 0)
-		return (-1);
-	if (!str)
-	{
-		*line = ft_strdup("");
-		return (0);
-	}
-	res = ft_return(&str, line);
-	return (res);
+    if (!line)
+        return(-1);
+    *line = NULL;
+    if (!(*line = ft_realloc(*line, &malloc_size)))
+        return (-1);
+    while ((r = read(fd, &(*line)[++i], 1)))
+    {
+        if ((*line)[i] == 10)
+            break ;
+        if (i == malloc_size - 2)
+            if (!(*line = ft_realloc(*line, &malloc_size)))
+                return (-1);
+    }
+    (*line)[i] = 0;
+    return (r);
 }

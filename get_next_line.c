@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-char *ft_realloc(char *line, int *i)
+char    *ft_realloc(char *line, int *i)
 {
     int l = 0;
     char *str;
@@ -30,11 +30,11 @@ char *ft_realloc(char *line, int *i)
         str[l] = 0;
         l++;
     }
-    // free(line);
+    free(line);
     return(str);
 }
 
-int get_next_line(int fd, char **line)
+int     get_next_line(int fd, char **line)
 {
     int r = 1;
     int i = -1;
